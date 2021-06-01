@@ -1,4 +1,4 @@
-# SAML-test-SP is a non-docker Saml testing plaform. 
+# strata-samel2-sp is a non-docker Saml testing plaform. 
 
 
 
