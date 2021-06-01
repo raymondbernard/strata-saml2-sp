@@ -2,14 +2,13 @@
 
 
 
-The mission of this repo is to create a small, golang-based SAML Service Provider or  SP.   This tool hopes to address End-to-end use cases or other testing scenarios.
+The mission of this repo is to create a small, golang-based SAML Service Provider or  SP.   This tool hopes to addresses End-to-end use cases or other testing scenarios.
 
 Note: This is initially a fork from https://github.com/BeryJu/saml-test-sp
 The repo depends on the code from https://github.com/crewjam/saml 
-Latest commit
 
 
-Refactoring goals.
+## Refactoring goals.
 Our version is refactored the same behavior into clear golang code.
 One of its best attributes of Golang is how readable and powerful it is.   As a result, the effort behind this repo is to make things easier to evaluate, extend and support the long-term feature set of this application.  
 
