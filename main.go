@@ -1,4 +1,5 @@
 package main
+// strata-saml2-sp supports End-to-end workflows or testing user cases.
 
 
 import (
@@ -23,7 +24,7 @@ import (
 )
 
 
-
+//Env checks to see if environmental varibles are set
 func Env(key string, fallback string) string {
 	value, exists := os.LookupEnv(key)
 	if exists {
@@ -32,6 +33,7 @@ func Env(key string, fallback string) string {
 	return fallback
 }
 
+// LoadConfig runs before the endpoints are served and attaches the SP Entity id to the workflow, along with a x.509 Cert. 
 func LoadConfig() samlsp.Options {
 	samlOptions := samlsp.Options{
 		AllowIDPInitiated: true,
@@ -39,7 +41,7 @@ func LoadConfig() samlsp.Options {
 	}
 
 	samlOptions.EntityID = Env("SP_ENTITY_ID", "saml-test-sp")
-
+	// Looks for metadata SP_METADATA_URL 
 	metadataURL, metadataURLexists := os.LookupEnv("SP_METADATA_URL")
 	if metadataURLexists {
 		log.Debugf("Will attempt to load metadata from %s", metadataURL)
@@ -49,6 +51,7 @@ func LoadConfig() samlsp.Options {
 		}
 		samlOptions.IDPMetadataURL = idpMetadataURL
 	} else {
+		// if the SP_METADATA_URL is not defined, an empty string is passed.
 		ssoURL := Env("SP_SSO_URL", "")
 		binding := Env("SP_SSO_BINDING", saml.HTTPPostBinding)
 		samlOptions.IDPMetadata = &saml.EntityDescriptor{
@@ -87,7 +90,7 @@ func LoadConfig() samlsp.Options {
 		panic(err)
 	}
 	samlOptions.URL = *url
-
+	// generate private and public certificates at the localhost.
 	priv, pub := Generate(fmt.Sprintf("localhost,%s", url.Hostname()))
 	samlOptions.Key = priv
 	samlOptions.Certificate = pub
@@ -95,7 +98,7 @@ func LoadConfig() samlsp.Options {
 	return samlOptions
 }
 
-
+// generate x.509 certifidates 
 func Generate(host string) (*rsa.PrivateKey, *x509.Certificate) {
 	priv, err := rsa.GenerateKey(rand.Reader, 2048)
 
@@ -143,7 +146,7 @@ func Generate(host string) (*rsa.PrivateKey, *x509.Certificate) {
 
 
 
-
+// Hello func recieves the SAML session and applies to the header
 func hello(w http.ResponseWriter, r *http.Request) {
 	s := samlsp.SessionFromContext(r.Context())
 	if s == nil {
@@ -164,9 +167,10 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
+// Go to http://localhost.com/health to check if you can see "IDQL will rule them all"
 func health(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
-	fmt.Fprint(w, "hello :)")
+	fmt.Fprint(w, "IDQL will rule them all")
 }
 
 func logRequest(handler http.Handler) http.Handler {
@@ -176,7 +180,8 @@ func logRequest(handler http.Handler) http.Handler {
 	})
 }
 
-
+// RunServer serves 3 endpoints from localhost:9009
+// "http://localhost/", "http://localhost/saml/"
 func RunServer() {
 	config := LoadConfig()
 
@@ -185,6 +190,7 @@ func RunServer() {
 	if err != nil {
 		panic(err)
 	}
+	// root requires saml workflow
 	http.Handle("/", samlSP.RequireAccount(http.HandlerFunc(hello)))
 	http.Handle("/saml/", samlSP)
 	http.HandleFunc("/health", health)
@@ -208,10 +214,11 @@ func RunServer() {
 }
 
 
-
+// main is the start of the program
 func main() {
+	//logs are set	
 	log.SetLevel(log.DebugLevel)
-
+	// Runserver is called
 	RunServer()
 
 }
