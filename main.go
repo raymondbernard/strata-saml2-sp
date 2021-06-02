@@ -1,5 +1,5 @@
 package main
-// strata-saml2-sp supports End-to-end workflows or testing user cases.
+// strata-saml2-sp supports End-to-end workflows or testing use cases.
 
 
 import (
@@ -147,6 +147,7 @@ func Generate(host string) (*rsa.PrivateKey, *x509.Certificate) {
 
 
 // Hello func recieves the SAML session and applies to the header
+// Hello is called from RunServer func 
 func hello(w http.ResponseWriter, r *http.Request) {
 	s := samlsp.SessionFromContext(r.Context())
 	if s == nil {
@@ -173,6 +174,7 @@ func health(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "IDQL will rule them all")
 }
 
+//Logging handdler 
 func logRequest(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.WithField("remoteAddr", r.RemoteAddr).WithField("method", r.Method).Info(r.URL)
