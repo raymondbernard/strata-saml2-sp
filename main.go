@@ -1,5 +1,5 @@
 package main
-// strata-saml2-sp supports End-to-end workflows or testing use cases.
+// strata-saml2-sp supports End-to-end workflows and or testing use cases.
 
 
 import (
