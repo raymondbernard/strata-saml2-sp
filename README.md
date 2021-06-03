@@ -51,6 +51,8 @@ Optionally, if you want to use SSL, set these variables
 Note: If you're manually setting `SP_ROOT_URL`, ensure that you prefix that URL with https.
 
 ## Running
-go run main.go
+1) Install Golang 1.6.x
+2) go mod init
+3) go mod tidy 
 
 
