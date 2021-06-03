@@ -54,5 +54,5 @@ Note: If you're manually setting `SP_ROOT_URL`, ensure that you prefix that URL 
 1) Install Golang 1.6.x
 2) go mod init
 3) go mod tidy 
-
+4) go run main.go 
 
